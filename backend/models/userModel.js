@@ -27,7 +27,7 @@ const userSchema = new mongoose.Schema(
     location: {
       type: String,
     },
-    Dob: {
+    dob: {
       type: Date,
     },
     followers: [

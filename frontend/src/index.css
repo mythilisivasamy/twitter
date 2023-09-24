@@ -1,0 +1,76 @@
+@import url('https://fonts.googleapis.com/css2?family=Barlow&family=Barlow+Condensed&family=PT+Sans&display=swap&family=Poppins:wght@700&display=swap');
+
+:root {
+  --dark: #2b2d42;
+  --light: #f8f9fa;
+  --lightgreen: #7ed957;
+  --darkblue: #0097b2;
+  --lightblue: #0cc0df;
+  --border: #dee2e6;
+  --border-btn: #edf2f4;
+}
+
+body {
+  background-color: var(--light);
+  font-family: 'Barlow', 'sans-serif';
+  font-size: 16px;
+}
+a {
+  font-family: 'PT Sans', sans-serif;
+  text-decoration: none;
+  font-size: 18px;
+}
+p {
+  color: var(--darkblue);
+}
+.error {
+  color: red;
+}
+.login-container {
+  margin-top: 8rem;
+}
+
+#stick {
+  position: fixed;
+  z-index: 999;
+
+  overflow-x: hidden;
+}
+.input-bg {
+  background-color: #fff;
+  color: var(--darkblue);
+  font-size: 0.9rem;
+  height: 2.9rem;
+}
+
+.custom-btn {
+  padding: 0.6rem;
+  border-radius: 4px;
+}
+
+.custom-btn-blue {
+  border: 1px solid #b3e0ff;
+  background-color: #b3e0ff;
+  color: #fff;
+}
+
+.custom-btn-white {
+  border: 1px solid #dee5e9;
+  background-color: #dee5e9;
+  color: #000;
+}
+
+@media only screen and (max-width: 450px) {
+  .login-container {
+    margin-top: 2.5rem;
+  }
+  .card {
+    border: none !important;
+  }
+  .shadow {
+    box-shadow: none !important;
+  }
+  .card-body {
+    padding: 0px 1.4rem !important;
+  }
+}

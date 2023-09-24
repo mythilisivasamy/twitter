@@ -29,7 +29,6 @@ const tweetSchema = new mongoose.Schema(
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
-        required: true,
       },
     ],
     comments: [commentsSchema],
@@ -37,14 +36,12 @@ const tweetSchema = new mongoose.Schema(
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
-        required: true,
       },
     ],
     replies: [
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Tweet',
-        required: true,
       },
     ],
   },

@@ -8,7 +8,7 @@ import { isAuth } from '../middleware/protectedRoute.js';
 const authRouter = express.Router();
 
 authRouter.post('/register', (req, res) => {
-  const { name, userName, email, password } = req.body;
+  const { name, userName, email, password, location, dob } = req.body;
 
   User.findOne({ email: email })
     .then((userInDB) => {
@@ -24,13 +24,13 @@ authRouter.post('/register', (req, res) => {
           userName,
           email,
           password: hashedpwd,
+          location,
+          dob,
         });
         user
           .save()
           .then(() => {
             res.status(201).json({
-              email,
-              password,
               message: 'User Signed Up Successfully',
               statusCode: '201',
             });
@@ -62,9 +62,11 @@ authRouter.post('/login', (req, res, next) => {
             process.env.JWT_SECRET
           );
           res.status(201).json({
-            userInfo: {
+            authInfo: {
               token: jwtToken,
               name: userInDB.userName,
+              email: userInDB.email,
+              _id: userInDB._id,
             },
             message: 'User Logged In Successfully',
             statusCode: '201',

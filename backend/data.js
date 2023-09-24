@@ -33,6 +33,31 @@ const data = {
       password: bcrypt.hashSync('1234'),
     },
   ],
+  tweets: [
+    {
+      content:
+        'Take a look at this Twint will let you scrape a lot of tweets, you can be as specific of as vague as you want',
+      tweetedBy: '650d4d5149b225f0cbf21014',
+    },
+    {
+      content:
+        'I need a fake news dataset with twitter user information. Is there any dataset without fakenewsnet?',
+      tweetedBy: '650d4d5149b225f0cbf21014',
+    },
+    {
+      content: 'please provide me twitter review on mobile phone as a dataset',
+      tweetedBy: '650d4d5149b225f0cbf21015',
+    },
+    {
+      content:
+        'Take a look at this Twint will let you scrape a lot of tweets, you can be as specific of as vague as you want',
+      tweetedBy: '650d4d5149b225f0cbf21016',
+    },
+    {
+      content: 'please provide me twitter review on mobile phone as a dataset',
+      tweetedBy: '650d4d5149b225f0cbf21017',
+    },
+  ],
 };
 
 export default data;

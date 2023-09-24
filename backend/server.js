@@ -5,6 +5,7 @@ import cors from 'cors';
 import seedRouter from './routes/seedRoutes.js';
 import userRouter from './routes/userRoutes.js';
 import authRouter from './routes/authRoutes.js';
+import tweetRouter from './routes/tweetRoutes.js';
 import globalErrorHandler from './middleware/errorHandler.js';
 
 // Connecting MongoDB
@@ -27,6 +28,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/api/seed', seedRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/user', userRouter);
+app.use('/api/tweet', tweetRouter);
 app.use(globalErrorHandler);
 
 // Express Server Listening at the port
