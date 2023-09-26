@@ -1,6 +1,9 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 const TWEET_URL = 'http://localhost:8000/api/tweet';
+if (localStorage.getItem('allTweets') === 'undefined') {
+  localStorage.setItem('allTweets', '');
+}
 const initialState = {
   message: '',
   statusCode: '',

@@ -1,7 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 const AUTH_URL = 'http://localhost:8000/api/auth';
-const USER_URL='http://localhost:8000/api/user'
 if (localStorage.getItem('authInfo') === 'undefined') {
   localStorage.setItem('authInfo', '');
 }
@@ -42,19 +41,6 @@ export const updateProfile = createAsyncThunk(
 export const login = createAsyncThunk('auth/login', async (newauth) => {
   try {
     const response = await axios.post(`${AUTH_URL}/login`, newauth);
-    return response.data;
-  } catch (err) {
-    return err.message;
-  }
-});
-
-//Fetch auths
-export const fetchUser = createAsyncThunk('auth/fetchUser', async (id) => {
-  try {
-    const { token } = JSON.parse(localStorage.getItem('authInfo'));
-    const response = await axios.get(`${USER_URL}/${id}`, {
-      headers: { authorization: `Bearer ${token}` },
-    });
     return response.data;
   } catch (err) {
     return err.message;
@@ -122,14 +108,6 @@ const authSlice = createSlice({
       .addCase(updateProfile.rejected, (state, action) => {
         state.message = action.error.message;
         state.statusCode = '';
-      })
-      .addCase(fetchUser.pending, (state) => {
-        state.message = 'loading';
-        state.statusCode = '';
-      })
-      .addCase(fetchUser.fulfilled, (state, action) => {
-        state.statusCode = action.payload.statusCode;
-        state.user = action.payload.user;
       });
   },
 });
@@ -139,6 +117,6 @@ export const selectAuthStatusCode = (state) => state.auth.statusCode;
 export const selectAuthInfo = (state) => state.auth.authInfo;
 export const selectEmail = (state) => state.auth.email;
 export const selectPassword = (state) => state.auth.password;
-export const selectUser=state=>state.auth.user;
+
 export const { setStatusCode, setToken, signout } = authSlice.actions;
 export default authSlice.reducer;

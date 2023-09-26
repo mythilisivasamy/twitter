@@ -8,11 +8,21 @@ userRouter.get(
   '/:id',
   isAuth,
   asyncHandler(async (req, res) => {
-    const user = await User.findById({ _id: req.params.id });
-    console.log(user);
-    if (user) {
-      res.json({ message: 'user sent', user, statusCode: '201' });
-    } else {
+    let tweets;
+    try {
+      const user = await User.findById({ _id: req.params.id });
+      if (user) {
+        try {
+          const _tweets = await Tweet.find({ tweetedBy: req.params.id });
+          if (_tweets) {
+            tweets=_tweets;
+          }
+        } catch (err) {
+          console.log(err);
+        }
+        res.json({ message: 'user sent', tweets, user, statusCode: '201' });
+      }
+    } catch (err) {
       res.status(404).send({ message: 'User Not Found' });
     }
   })

@@ -45,14 +45,20 @@ const Home = () => {
   const authInfo = JSON.parse(localStorage.getItem('authInfo'));
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const allTweets = useSelector(selectAllTweets);
+  const allTweets$ = useSelector(selectAllTweets);
+  const [allTweets, setAllTweets] = useState(allTweets$);
   const [image, setImage] = useState({
     preview: '',
     data: '',
   });
   const [isdropZone, setDropZone] = useState(false);
   const { register, handleSubmit } = useForm();
+
+  //use Effect
   useEffect(() => {
+    if (!allTweets) {
+      setAllTweets(JSON.parse(localStorage.getItem('allTweets')));
+    }
     if (statusCode === '201') {
       dispatch(setStatusCode());
     }
@@ -60,7 +66,7 @@ const Home = () => {
       dispatch(fetchTweets());
       dispatch(setStatusCode());
     }
-  }, [statusCode, dispatch]);
+  }, [statusCode, dispatch, allTweets$, allTweets, setAllTweets]);
 
   //Handling file select
   const handleFileSelect = (event) => {
@@ -76,6 +82,8 @@ const Home = () => {
   const handleLike = (tweetId) => {
     dispatch(likeTweet(tweetId));
   };
+
+  //handling delete button
   const handleDelete = (tweetId) => {
     dispatch(deleteTweet(tweetId));
   };
@@ -88,7 +96,6 @@ const Home = () => {
     try {
       if (title === 'Tweet') {
         dispatch(createTweet({ ...formValues })).unwrap();
-        
       }
       if (title === 'Comment') {
         dispatch(createComment({ ...formValues, tweetId })).unwrap();
@@ -104,6 +111,7 @@ const Home = () => {
     dispatch(signout());
     navigate('/login');
   };
+  
   return (
     <div className="container small-container bg-info h-75">
       <div className="row gx-0 justify-content-md-center">
@@ -227,15 +235,16 @@ const Home = () => {
             <ListGroup horizontal>
               <ListGroup.Item>
                 <Button type="submit" variant="primary" onClick={handleClose}>
-                  {`save ${title}`}
+                  {`send ${title}`}
                 </Button>
               </ListGroup.Item>
-              {title==='Tweet'&&
-              <ListGroup.Item>
-                <Button variant="primary" onClick={() => setDropZone(false)}>
-                  Cancel Image
-                </Button>
-              </ListGroup.Item>}
+              {title === 'Tweet' && (
+                <ListGroup.Item>
+                  <Button variant="primary" onClick={() => setDropZone(false)}>
+                    Cancel Image
+                  </Button>
+                </ListGroup.Item>
+              )}
             </ListGroup>
           </form>
         </Modal.Body>
