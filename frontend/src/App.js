@@ -5,6 +5,7 @@ import Home from './Home';
 import Login from './Login';
 import Register from './Register';
 import RouteGuard from './components/RouteGuard';
+import Profile from './Profile';
 function App() {
   return (
     <Router>
@@ -22,6 +23,7 @@ function App() {
 
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/profile/:id" element={<Profile />} />
         </Route>
       </Routes>
     </Router>

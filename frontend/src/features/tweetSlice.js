@@ -13,6 +13,7 @@ export const createTweet = createAsyncThunk(
   async (newTweet) => {
     try {
       const { token } = JSON.parse(localStorage.getItem('authInfo'));
+
       const response = await axios.post(`${TWEET_URL}/`, newTweet, {
         headers: { authorization: `Bearer ${token}` },
       });
@@ -22,9 +23,42 @@ export const createTweet = createAsyncThunk(
     }
   }
 );
+export const createComment = createAsyncThunk(
+  'tweet/createComment',
+  async (newComment) => {
+    try {
+      console.log(newComment);
+      const { token } = JSON.parse(localStorage.getItem('authInfo'));
+
+      const response = await axios.post(`${TWEET_URL}/comment`, newComment, {
+        headers: { authorization: `Bearer ${token}` },
+      });
+      return response.data;
+    } catch (err) {
+      return err.message;
+    }
+  }
+);
+
 export const fetchTweets = createAsyncThunk('/fetchTweets', async () => {
   try {
     const response = await axios.get(`${TWEET_URL}/`);
+    return response.data;
+  } catch (err) {
+    return err.message;
+  }
+});
+export const deleteTweet = createAsyncThunk('/deleteTweet', async (tweetId) => {
+  try {
+    const { token } = JSON.parse(localStorage.getItem('authInfo'));
+    const response = await axios.put(
+      `${TWEET_URL}/${tweetId}/delete`,
+      {},
+      {
+        headers: { authorization: `Bearer ${token}` },
+      }
+    );
+
     return response.data;
   } catch (err) {
     return err.message;
@@ -67,9 +101,13 @@ const tweetSlice = createSlice({
         state.message = action.payload.message;
         state.statusCode = action.payload.statusCode;
       })
-      .addCase(createTweet.rejected, (state, action) => {
-        state.message = action.error.message;
+      .addCase(createComment.pending, (state) => {
+        state.message = 'loading';
         state.statusCode = '';
+      })
+      .addCase(createComment.fulfilled, (state, action) => {
+        state.message = action.payload.message;
+        state.statusCode = action.payload.statusCode;
       })
       .addCase(fetchTweets.pending, (state) => {
         state.message = 'loading';
@@ -93,6 +131,14 @@ const tweetSlice = createSlice({
         state.statusCode = '';
       })
       .addCase(likeTweet.fulfilled, (state, action) => {
+        state.message = action.payload.message;
+        state.statusCode = action.payload.statusCode;
+      })
+      .addCase(deleteTweet.pending, (state) => {
+        state.message = 'loading';
+        state.statusCode = '';
+      })
+      .addCase(deleteTweet.fulfilled, (state, action) => {
         state.message = action.payload.message;
         state.statusCode = action.payload.statusCode;
       });

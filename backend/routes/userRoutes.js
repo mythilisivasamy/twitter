@@ -6,10 +6,12 @@ import asyncHandler from 'express-async-handler';
 const userRouter = express.Router();
 userRouter.get(
   '/:id',
+  isAuth,
   asyncHandler(async (req, res) => {
     const user = await User.findById({ _id: req.params.id });
+    console.log(user);
     if (user) {
-      res.send({ user });
+      res.json({ message: 'user sent', user, statusCode: '201' });
     } else {
       res.status(404).send({ message: 'User Not Found' });
     }

@@ -8,13 +8,14 @@ import authRouter from './routes/authRoutes.js';
 import tweetRouter from './routes/tweetRoutes.js';
 import globalErrorHandler from './middleware/errorHandler.js';
 
+
 // Connecting MongoDB
 import connectDB from './database/connection.js';
 // Initiate the Express Application
+
 const app = express();
 app.use(express.json());
 app.use(cors());
-
 //Configuring Process Environment Variables
 dotenv.config({ path: 'config.env' });
 const PORT = process.env.PORT;
@@ -22,7 +23,6 @@ const PORT = process.env.PORT;
 connectDB();
 //parse request to body-parser
 app.use(bodyParser.urlencoded({ extended: true }));
-
 //load routes
 
 app.use('/api/seed', seedRouter);

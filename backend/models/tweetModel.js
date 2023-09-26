@@ -50,4 +50,6 @@ const tweetSchema = new mongoose.Schema(
   }
 );
 const Tweet = mongoose.model('tweet', tweetSchema);
+const Comment=mongoose.model('comment',commentsSchema)
 export default Tweet;
+
