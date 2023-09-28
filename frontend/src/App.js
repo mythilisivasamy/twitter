@@ -4,26 +4,31 @@ import Layout from './components/Layout';
 import Home from './Home';
 import Login from './Login';
 import Register from './Register';
-import RouteGuard from './components/RouteGuard';
 import Profile from './Profile';
+import ProfileImg from './components/ProfileImg';
+import RouteGuard from './components/RouteGuard';
+import TweetList from './components/TweetList';
 function App() {
   return (
     <Router>
       <ScrollToTop />
       <Routes>
         <Route path="/" element={<Layout />}>
+          <Route index element={<Login />}></Route>
+
           <Route
-            path="home"
+            path="/home"
             element={
               <RouteGuard>
                 <Home />
               </RouteGuard>
             }
-          />
-
-          <Route path="/login" element={<Login />} />
+          >
+            <Route index element={<TweetList />} />
+          </Route>
           <Route path="/register" element={<Register />} />
-          <Route path="/profile/:id" element={<Profile />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/upload" element={<ProfileImg />} />
         </Route>
       </Routes>
     </Router>

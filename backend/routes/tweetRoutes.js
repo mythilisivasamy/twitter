@@ -7,7 +7,7 @@ import multer from 'multer';
 const tweetRouter = express.Router();
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, '/public/images');
+    cb(null, 'public/images/');
   },
   filename: (req, file, cb) => {
     cb(null, file.originalname);
@@ -34,6 +34,7 @@ const upload = multer({
     }
   },
 });
+
 //Tweets API
 
 tweetRouter.get(
@@ -56,7 +57,12 @@ tweetRouter.get(
         .populate({
           path: 'tweetedBy',
           model: User,
-          select: '_id userName email createdAt',
+          select: '_id userName email following followers createdAt',
+        })
+        .populate({
+          path: 'retweetBy',
+          model: User,
+          select: '_id userName email following followers createdAt',
         })
         .exec();
       res.json({
@@ -74,6 +80,7 @@ tweetRouter.get(
 tweetRouter.post(
   '/',
   isAuth,
+  upload.single('profilePic'),
   asyncHandler(async (req, res) => {
     try {
       //const { _id } = await User.findById(req.user._id);
@@ -114,6 +121,17 @@ tweetRouter.put('/:id/like', isAuth, async (req, res) => {
     !tweet.likes.includes(req.user._id) && tweet.likes.push(req.user._id);
     const updatedTweet = await tweet.save();
     res.json({ message: 'Tweet liked', updatedTweet, statusCode: '202' });
+  } else {
+    res.send('error');
+  }
+});
+tweetRouter.put('/:id/retweet', isAuth, async (req, res) => {
+  const tweet = await Tweet.findById(req.params.id);
+  if (tweet) {
+    !tweet.retweetBy.includes(req.user._id) &&
+      tweet.retweetBy.push(req.user._id);
+    const updatedTweet = await tweet.save();
+    res.json({ message: 'ReTweeted', updatedTweet, statusCode: '202' });
   } else {
     res.send('error');
   }

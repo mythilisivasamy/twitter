@@ -8,19 +8,10 @@ userRouter.get(
   '/:id',
   isAuth,
   asyncHandler(async (req, res) => {
-    let tweets;
     try {
       const user = await User.findById({ _id: req.params.id });
       if (user) {
-        try {
-          const _tweets = await Tweet.find({ tweetedBy: req.params.id });
-          if (_tweets) {
-            tweets=_tweets;
-          }
-        } catch (err) {
-          console.log(err);
-        }
-        res.json({ message: 'user sent', tweets, user, statusCode: '201' });
+        res.json({ message: 'user sent', user, statusCode: '201' });
       }
     } catch (err) {
       res.status(404).send({ message: 'User Not Found' });
@@ -66,5 +57,8 @@ userRouter.put('/:id/unfollow', async (req, res) => {
     res.send(err);
   }
 });
+userRouter.put('/:id/uploadProfilePic',async(req,res)=>{
+  
+})
 
 export default userRouter;

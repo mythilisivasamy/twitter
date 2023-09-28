@@ -1,13 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import {
-  fetchUser,
-  selectUserInfo,
-  selectUserTweets,
-} from './features/userSlice';
+import { fetchUser, selectUserInfo } from './features/userSlice';
 
 import Button from 'react-bootstrap/Button';
 import ListGroup from 'react-bootstrap/ListGroup';
@@ -16,8 +12,7 @@ const Profile = () => {
   const { id } = params;
   const dispatch = useDispatch();
   const user = useSelector(selectUserInfo);
-  const tweets = useSelector(selectUserTweets);
-  //const [user, setUser] = useState(user$);
+
   useEffect(() => {
     try {
       dispatch(fetchUser(id)).unwrap();
@@ -63,11 +58,6 @@ const Profile = () => {
                   </Col>
                 </Row>
               </ListGroup.Item>
-
-              {tweets && tweets.map(tweet=>(
-              <ListGroup.Item>
-                {tweet.content}
-              </ListGroup.Item>))}
             </ListGroup>
           </Col>
         </Row>

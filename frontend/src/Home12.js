@@ -2,12 +2,20 @@ import { useNavigate } from 'react-router-dom';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-//import { signout } from '../features/authSlice';
+import { signout } from './features/authSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import TweetExcerpt from './TweetExcerpt';
+import TweetExcerpt from './components/TweetExcerpt';
 
-import { faImage } from '@fortawesome/free-solid-svg-icons';
+import './Home.css';
+import {
+  faAddressCard,
+  faEnvelope,
+  faHome,
+  faImage,
+  faRightFromBracket,
+  faUser,
+} from '@fortawesome/free-solid-svg-icons';
 import { toast } from 'react-toastify';
 import { useEffect, useState, createRef } from 'react';
 import { useForm } from 'react-hook-form';
@@ -18,13 +26,12 @@ import {
   deleteTweet,
   fetchTweets,
   likeTweet,
-  reTweet,
   selectAllTweets,
   selectStatusCode,
   setStatusCode,
-} from '../features/tweetSlice';
+} from './features/tweetSlice';
 
-const TweetList = () => {
+const Home = () => {
   const fileInput = createRef();
   const [show, setShow] = useState(false);
   const [title, setTitle] = useState('');
@@ -37,7 +44,9 @@ const TweetList = () => {
   };
 
   const statusCode = useSelector(selectStatusCode);
+  const authInfo = JSON.parse(localStorage.getItem('authInfo'));
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const allTweets = useSelector(selectAllTweets);
   const [image, setImage] = useState({
     preview: '',
@@ -74,9 +83,6 @@ const TweetList = () => {
   const handleLike = (tweetId) => {
     dispatch(likeTweet(tweetId));
   };
-  const handleRetweet=(tweetId) => {
-    dispatch(reTweet(tweetId));
-  };
 
   //handling delete button
   const handleDelete = (tweet) => {
@@ -99,40 +105,93 @@ const TweetList = () => {
     setDropZone(false);
   };
 
-  /* const clickHandler = () => {
+  const clickHandler = () => {
     dispatch(signout());
     navigate('/login');
-  }; */
+  };
+
   return (
-   
-      <div className="col col-sm-9 p-0 ">
-        <div
-          className="container mt-0 p-0 border border-1 bg-light"
-          style={{maxWidth:'500px'}}
-        >
-          <Card>
-        <Card.Body>
-          <div className="d-flex justify-content-between">
-            <h4>Home</h4>
-            <Button variant="info" onClick={() => handleShow('Tweet')}>
-              Tweet
-            </Button>
+    <div className="container small-container bg-info h-75">
+      <div className="row gx-0 justify-content-md-center">
+        <div className="col col-sm-10 col-md-4 bg-white">
+          <div
+            className="d-flex align-items-start justify-content-between flex-column bd-highlight mb-3 bg-white"
+            style={{ height: '600px' }}
+            id="stick"
+          >
+            <ListGroup variant="flush">
+              <ListGroup.Item>
+                <button
+                  className="bg-light border-0"
+                  onClick={() => handleProfile()}
+                >
+                  <FontAwesomeIcon icon={faHome} />
+
+                  <span className="px-3 mt-5">Home</span>
+                </button>
+              </ListGroup.Item>
+              <ListGroup.Item>
+                <span style={{ cursor: 'pointer' }}>
+                  <FontAwesomeIcon icon={faAddressCard} />
+                  <span className="px-3">Profile</span>
+                </span>
+              </ListGroup.Item>
+              <ListGroup.Item>
+                <span onClick={clickHandler} style={{ cursor: 'pointer' }}>
+                  <FontAwesomeIcon icon={faRightFromBracket} />
+                  <span className="px-3">Logout</span>
+                </span>
+              </ListGroup.Item>
+            </ListGroup>
+
+            <ListGroup variant="flush" className="self-align-end">
+              <ListGroup.Item>
+                <button
+                  className="bg-light border-0"
+                  onClick={() => handleProfile()}
+                >
+                  <FontAwesomeIcon icon={faUser} />
+
+                  <span className="px-3 mt-5">{authInfo.name}</span>
+                  <p>
+                    <FontAwesomeIcon icon={faEnvelope} /> {authInfo.email}
+                  </p>
+                </button>
+              </ListGroup.Item>
+            </ListGroup>
           </div>
-        </Card.Body>
-      </Card>
-          {allTweets &&
-            allTweets.map((tweet) => (
-              <TweetExcerpt
-                key={tweet._id}
-                tweet={tweet}
-                handleLike={handleLike}
-                handleShow={handleShow}
-                handleDelete={handleDelete}
-                handleProfile={handleProfile}
-                handleRetweet={handleRetweet}
-              />
-            ))}
         </div>
+        <div className="col col-sm-10 col-md-8 bg-white h-75">
+          <Card>
+            <Card.Body>
+              <div className="d-flex justify-content-between">
+                <h4>Home</h4>
+                <Button variant="info" onClick={() => handleShow('Tweet')}>
+                  Tweet
+                </Button>
+              </div>
+            </Card.Body>
+          </Card>
+          <Card>
+            <Card.Body>
+              <ListGroup variant="flush">
+                {allTweets &&
+                  allTweets.map((tweet) => (
+                    <ListGroup.Item key={tweet._id}>
+                      <TweetExcerpt
+                        tweet={tweet}
+                        handleLike={handleLike}
+                        handleShow={handleShow}
+                        handleDelete={handleDelete}
+                        handleProfile={handleProfile}
+                      />
+                    </ListGroup.Item>
+                  ))}
+              </ListGroup>
+            </Card.Body>
+          </Card>
+        </div>
+      </div>
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>{`New ${title}`}</Modal.Header>
         <Modal.Body>
@@ -196,9 +255,8 @@ const TweetList = () => {
           </form>
         </Modal.Body>
       </Modal>
-      </div>
-    
+    </div>
   );
 };
 
-export default TweetList;
+export default Home;

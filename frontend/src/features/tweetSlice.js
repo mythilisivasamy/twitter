@@ -15,6 +15,7 @@ export const createTweet = createAsyncThunk(
   'tweet/createTweet',
   async (newTweet) => {
     try {
+      console.log('new Tweet', newTweet);
       const { token } = JSON.parse(localStorage.getItem('authInfo'));
 
       const response = await axios.post(`${TWEET_URL}/`, newTweet, {
@@ -67,11 +68,27 @@ export const deleteTweet = createAsyncThunk('/deleteTweet', async (tweetId) => {
     return err.message;
   }
 });
-export const likeTweet = createAsyncThunk('/likeTweet', async (tweetId) => {
+export const likeTweet = createAsyncThunk('tweet/likeTweet', async (tweetId) => {
   try {
     const { token } = JSON.parse(localStorage.getItem('authInfo'));
     const response = await axios.put(
       `${TWEET_URL}/${tweetId}/like`,
+      {},
+      {
+        headers: { authorization: `Bearer ${token}` },
+      }
+    );
+
+    return response.data;
+  } catch (err) {
+    return err.message;
+  }
+});
+export const reTweet = createAsyncThunk('tweet/reTweet', async (tweetId) => {
+  try {
+    const { token } = JSON.parse(localStorage.getItem('authInfo'));
+    const response = await axios.put(
+      `${TWEET_URL}/${tweetId}/retweet`,
       {},
       {
         headers: { authorization: `Bearer ${token}` },
@@ -137,6 +154,10 @@ const tweetSlice = createSlice({
         state.message = action.payload.message;
         state.statusCode = action.payload.statusCode;
       })
+      .addCase(reTweet.fulfilled, (state, action) => {
+        state.message = action.payload.message;
+        state.statusCode = action.payload.statusCode;
+      })
       .addCase(deleteTweet.pending, (state) => {
         state.message = 'loading';
         state.statusCode = '';
@@ -144,6 +165,10 @@ const tweetSlice = createSlice({
       .addCase(deleteTweet.fulfilled, (state, action) => {
         state.message = action.payload.message;
         state.statusCode = action.payload.statusCode;
+        const { _id } = action.payload;
+        const tweets = state.tweets.filter((t) => t._id !== _id);
+        state.tweets = tweets;
+        localStorage.setItem('allTweets', JSON.stringify(state.tweets));
       });
   },
 });
