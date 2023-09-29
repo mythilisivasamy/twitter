@@ -9,9 +9,7 @@ if (localStorage.getItem('userInfo') === 'undefined') {
 const initialState = {
   message: '',
   statusCode: '',
-  userInfo: localStorage.getItem('userInfo')
-    ? JSON.parse(localStorage.getItem('userInfo'))
-    : null,
+  userInfo:null,
   userTweets: localStorage.getItem('userTweets')
     ? JSON.parse(localStorage.getItem('userTweets'))
     : [],
@@ -48,7 +46,7 @@ const userSlice = createSlice({
         state.statusCode = '';
       })
       .addCase(fetchUser.fulfilled, (state, action) => {
-        state.statusCode = action.payload.statusCode;
+        state.status = action.payload.message;
         state.userInfo = action.payload.user;
         state.userTweets = action.payload.tweets;
         localStorage.setItem('userInfo', JSON.stringify(action.payload.user));

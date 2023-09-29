@@ -32,7 +32,7 @@ userRouter.put('/:id/follow', async (req, res) => {
         follower.followers.push(req.params.id);
       await follower.save();
     }
-    res.send('updated successfully');
+    res.json({message:'succeeded',user,statusCode:'201'})
   } else {
     res.send('error');
   }

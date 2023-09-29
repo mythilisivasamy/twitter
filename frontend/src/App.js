@@ -8,6 +8,7 @@ import Profile from './Profile';
 import ProfileImg from './components/ProfileImg';
 import RouteGuard from './components/RouteGuard';
 import TweetList from './components/TweetList';
+import UserProfile from './components/UserProfile';
 function App() {
   return (
     <Router>
@@ -24,6 +25,7 @@ function App() {
               </RouteGuard>
             }
           >
+
             <Route
               index
               element={
@@ -32,8 +34,10 @@ function App() {
                 </RouteGuard>
               }
             />
+             <Route path='tweet/:id' element={<UserProfile />} />
             <Route path="profile" element={<Profile />} />
             <Route path="upload" element={<ProfileImg />} />
+           
           </Route>
           <Route path="register" element={<Register />} />
         </Route>

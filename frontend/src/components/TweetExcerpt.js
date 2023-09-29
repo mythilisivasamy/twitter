@@ -1,5 +1,6 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Time from './Time';
+import { Link } from 'react-router-dom';
 import {
   faComment,
   faHeart,
@@ -10,6 +11,7 @@ import {
 
 const TweetExcerpt = ({ ...props }) => {
   const authInfo = JSON.parse(localStorage.getItem('authInfo'));
+  let reTweeted = props.tweet.retweetBy.find((rt) => rt._id === authInfo._id);
 
   return (
     <div className="card " style={{ maxWidth: '500px' }}>
@@ -17,7 +19,7 @@ const TweetExcerpt = ({ ...props }) => {
         <li className="list-group-item">
           <div className="d-flex justify-content-between ">
             <span className="px-4">
-              {props.tweet.retweetBy.includes(authInfo._id) ? (
+              {reTweeted ? (
                 <span className="px-1">
                   <FontAwesomeIcon
                     icon={faRetweet}
@@ -25,7 +27,6 @@ const TweetExcerpt = ({ ...props }) => {
                   />
                   <span className="px-2 small">
                     Retweeted By {authInfo.userName}
-                    
                   </span>
                 </span>
               ) : (
@@ -58,7 +59,11 @@ const TweetExcerpt = ({ ...props }) => {
               />
             </div>
             <div className="col-10">
-              <span className="fw-bold">@{props.tweet.tweetedBy.userName}</span>
+              <span className="fw-bold small">
+                <Link to={`tweet/${props.tweet._id}`} className="fw-bold small">
+                  @{props.tweet.tweetedBy.userName}
+                </Link>
+              </span>
               <span className="px-2">
                 <Time timeStamp={props.tweet.tweetedBy.createdAt} />
               </span>

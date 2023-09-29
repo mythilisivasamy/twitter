@@ -179,4 +179,6 @@ const tweetSlice = createSlice({
 export const selectStatus = (state) => state.tweet.status;
 export const selectAllTweets = (state) => state.tweet.tweets;
 export const { setStatusCode } = tweetSlice.actions;
+export const selectTweetById = (state, tweetId) => state.tweet.tweets.find((tweet) => tweet._id === tweetId);
+export const selectUserTweets=(state,tweet)=>state.tweet.tweets.filter(t=>t.tweetedBy._id===tweet.tweetedBy._id)
 export default tweetSlice.reducer;
