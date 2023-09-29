@@ -10,18 +10,22 @@ import {
 
 const TweetExcerpt = ({ ...props }) => {
   const authInfo = JSON.parse(localStorage.getItem('authInfo'));
+
   return (
     <div className="card " style={{ maxWidth: '500px' }}>
       <ul className="list-group list-group-flush">
         <li className="list-group-item">
           <div className="d-flex justify-content-between ">
             <span className="px-4">
-              {props.tweet.retweetBy.length !== 0 ? (
+              {props.tweet.retweetBy.includes(authInfo._id) ? (
                 <span className="px-1">
-                  <FontAwesomeIcon icon={faRetweet} />
-                  <span className="px-2">
-                    {'Retweeted By '}
-                    {props.tweet.retweetBy[0].userName}
+                  <FontAwesomeIcon
+                    icon={faRetweet}
+                    style={{ color: '#0097b2' }}
+                  />
+                  <span className="px-2 small">
+                    Retweeted By {authInfo.userName}
+                    
                   </span>
                 </span>
               ) : (
@@ -34,7 +38,10 @@ const TweetExcerpt = ({ ...props }) => {
                   className="bg-white border-0"
                   onClick={() => props.handleDelete(props.tweet)}
                 >
-                  <FontAwesomeIcon icon={faTrash} style={{ color: '#000' }} />
+                  <FontAwesomeIcon
+                    icon={faTrash}
+                    style={{ color: '#0097b2' }}
+                  />
                 </button>
               ) : (
                 ''
@@ -60,7 +67,7 @@ const TweetExcerpt = ({ ...props }) => {
             </div>
             <div>
               <span>
-                {props.tweet.likes.length === 0 ? (
+                {!props.tweet.likes.length ? (
                   <button
                     className="bg-white border-0"
                     onClick={() => props.handleLike(props.tweet._id)}
@@ -71,7 +78,6 @@ const TweetExcerpt = ({ ...props }) => {
                       style={{ color: '#000' }}
                       title="like"
                     />
-                    <span className="px-1">{props.tweet.likes.length}</span>
                   </button>
                 ) : (
                   <button
@@ -87,8 +93,8 @@ const TweetExcerpt = ({ ...props }) => {
                     <span className="px-1">{props.tweet.likes.length}</span>
                   </button>
                 )}
-                <span className="px-2">
-                  {props.tweet.comments.length === 0 ? (
+                <span className="px-3">
+                  {!props.tweet.comments.length ? (
                     <span className="px-3" style={{ cursor: 'pointer' }}>
                       <button
                         className="bg-white border-0"
@@ -97,13 +103,7 @@ const TweetExcerpt = ({ ...props }) => {
                         }
                         disabled={props.tweet.tweetedBy._id === authInfo._id}
                       >
-                        <FontAwesomeIcon
-                          icon={faComment}
-                          style={{ color: '#000' }}
-                        />
-                        <span className="px-1">
-                          {props.tweet.comments.length}
-                        </span>
+                        <FontAwesomeIcon icon={faComment} />
                       </button>
                     </span>
                   ) : (
@@ -117,7 +117,7 @@ const TweetExcerpt = ({ ...props }) => {
                       >
                         <FontAwesomeIcon
                           icon={faComment}
-                          style={{ color: '#f00' }}
+                          style={{ color: '#0097b2' }}
                         />
                         <span className="px-1">
                           {props.tweet.comments.length}
@@ -132,8 +132,14 @@ const TweetExcerpt = ({ ...props }) => {
                     onClick={() => props.handleRetweet(props.tweet._id)}
                     disabled={props.tweet.tweetedBy._id === authInfo._id}
                   >
-                    <FontAwesomeIcon icon={faRetweet} />
-                    <span className="px-1">{props.tweet.retweetBy.length}</span>
+                    <FontAwesomeIcon
+                      icon={faRetweet}
+                      style={{ color: '#0097b2' }}
+                    />
+                    <span className="px-1">
+                      {props.tweet.retweetBy.length &&
+                        props.tweet.retweetBy.length}
+                    </span>
                   </button>
                 </span>
               </span>

@@ -44,12 +44,12 @@ const tweetSchema = new mongoose.Schema(
         ref: 'Tweet',
       },
     ],
+    
   },
   {
     timestamps: true,
   }
 );
 const Tweet = mongoose.model('tweet', tweetSchema);
-const Comment=mongoose.model('comment',commentsSchema)
+const Comment = mongoose.model('comment', commentsSchema);
 export default Tweet;
-

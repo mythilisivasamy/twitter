@@ -1,15 +1,11 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 const TWEET_URL = 'http://localhost:8000/api/tweet';
-if (localStorage.getItem('allTweets') === 'undefined') {
-  localStorage.setItem('allTweets', '');
-}
 const initialState = {
   message: '',
+  status: '',
   statusCode: '',
-  tweets: localStorage.getItem('allTweets')
-    ? JSON.parse(localStorage.getItem('allTweets'))
-    : [],
+  tweets: [],
 };
 export const createTweet = createAsyncThunk(
   'tweet/createTweet',
@@ -31,7 +27,6 @@ export const createComment = createAsyncThunk(
   'tweet/createComment',
   async (newComment) => {
     try {
-      console.log(newComment);
       const { token } = JSON.parse(localStorage.getItem('authInfo'));
 
       const response = await axios.post(`${TWEET_URL}/comment`, newComment, {
@@ -68,22 +63,25 @@ export const deleteTweet = createAsyncThunk('/deleteTweet', async (tweetId) => {
     return err.message;
   }
 });
-export const likeTweet = createAsyncThunk('tweet/likeTweet', async (tweetId) => {
-  try {
-    const { token } = JSON.parse(localStorage.getItem('authInfo'));
-    const response = await axios.put(
-      `${TWEET_URL}/${tweetId}/like`,
-      {},
-      {
-        headers: { authorization: `Bearer ${token}` },
-      }
-    );
+export const likeTweet = createAsyncThunk(
+  'tweet/likeTweet',
+  async (tweetId) => {
+    try {
+      const { token } = JSON.parse(localStorage.getItem('authInfo'));
+      const response = await axios.put(
+        `${TWEET_URL}/${tweetId}/like`,
+        {},
+        {
+          headers: { authorization: `Bearer ${token}` },
+        }
+      );
 
-    return response.data;
-  } catch (err) {
-    return err.message;
+      return response.data;
+    } catch (err) {
+      return err.message;
+    }
   }
-});
+);
 export const reTweet = createAsyncThunk('tweet/reTweet', async (tweetId) => {
   try {
     const { token } = JSON.parse(localStorage.getItem('authInfo'));
@@ -114,65 +112,71 @@ const tweetSlice = createSlice({
   extraReducers(builder) {
     builder
       .addCase(createTweet.pending, (state) => {
-        state.message = 'loading';
+        state.status = 'loading';
         state.statusCode = '';
       })
       .addCase(createTweet.fulfilled, (state, action) => {
-        state.message = action.payload.message;
+        state.status = action.payload.message;
         state.statusCode = action.payload.statusCode;
+        console.log(action.payload.tweet);
+        state.tweets.push(action.payload.tweet);
       })
       .addCase(createComment.pending, (state) => {
-        state.message = 'loading';
+        state.status = 'loading';
         state.statusCode = '';
       })
       .addCase(createComment.fulfilled, (state, action) => {
-        state.message = action.payload.message;
+        state.status = action.payload.message;
         state.statusCode = action.payload.statusCode;
+        const { _id } = action.payload.commentedTweet;
+        const tweets = state.tweets.filter((t) => t._id !== _id);
+        state.tweets = [...tweets, action.payload.commentedTweet];
       })
       .addCase(fetchTweets.pending, (state) => {
-        state.message = 'loading';
+        state.status = 'loading';
         state.statusCode = '';
       })
       .addCase(fetchTweets.fulfilled, (state, action) => {
-        state.message = action.payload.message;
+        state.status = action.payload.message;
         state.statusCode = action.payload.statusCode;
         state.tweets = action.payload.tweets;
-        localStorage.setItem(
-          'allTweets',
-          JSON.stringify(action.payload.tweets)
-        );
       })
       .addCase(fetchTweets.rejected, (state, action) => {
-        state.message = action.error.message;
+        state.status = action.error.message;
         state.statusCode = '';
       })
       .addCase(likeTweet.pending, (state) => {
-        state.message = 'loading';
+        state.status = 'loading';
         state.statusCode = '';
       })
       .addCase(likeTweet.fulfilled, (state, action) => {
-        state.message = action.payload.message;
+        state.status = action.payload.message;
         state.statusCode = action.payload.statusCode;
+        const { _id } = action.payload.likedTweet;
+        const tweets = state.tweets.filter((t) => t._id !== _id);
+        state.tweets = [...tweets, action.payload.likedTweet];
       })
       .addCase(reTweet.fulfilled, (state, action) => {
-        state.message = action.payload.message;
+        state.status = action.payload.message;
         state.statusCode = action.payload.statusCode;
+        const { _id } = action.payload.reTweeted;
+        const tweets = state.tweets.filter((t) => t._id !== _id);
+        state.tweets = [...tweets, action.payload.reTweeted];
       })
       .addCase(deleteTweet.pending, (state) => {
-        state.message = 'loading';
+        state.status = 'loading';
         state.statusCode = '';
       })
       .addCase(deleteTweet.fulfilled, (state, action) => {
-        state.message = action.payload.message;
+        state.status = action.payload.message;
         state.statusCode = action.payload.statusCode;
-        const { _id } = action.payload;
+        const { _id } = action.payload.deletedTweet;
         const tweets = state.tweets.filter((t) => t._id !== _id);
         state.tweets = tweets;
-        localStorage.setItem('allTweets', JSON.stringify(state.tweets));
       });
   },
 });
-export const selectStatusCode = (state) => state.tweet.statusCode;
+export const selectStatus = (state) => state.tweet.status;
 export const selectAllTweets = (state) => state.tweet.tweets;
 export const { setStatusCode } = tweetSlice.actions;
 export default tweetSlice.reducer;

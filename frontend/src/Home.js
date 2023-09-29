@@ -70,7 +70,7 @@ const Home = () => {
                 <ListGroup>
                   <ListGroup.Item>
                     <FontAwesomeIcon icon={faUser} />
-                    {authInfo.name}
+                    {authInfo.userName}
                   </ListGroup.Item>
                 </ListGroup>
               </div>

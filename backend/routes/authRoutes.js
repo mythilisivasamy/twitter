@@ -64,7 +64,7 @@ authRouter.post('/login', (req, res, next) => {
           res.status(201).json({
             authInfo: {
               token: jwtToken,
-              name: userInDB.userName,
+              userName: userInDB.userName,
               email: userInDB.email,
               _id: userInDB._id,
             },

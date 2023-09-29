@@ -1,9 +1,11 @@
-//import { format } from 'date-fns';
+import { parseISO, format } from 'date-fns';
 const Time = ({ timeStamp }) => {
-  let date = timeStamp.substring(0, timeStamp.indexOf('T'));
-
+  let date='';
+  if (timeStamp) {
+    date = format(parseISO(timeStamp), 'yyyy/MM/dd');
+  }
   return (
-    <span>
+    <span className="small">
       &nbsp;<i>{date} </i>
     </span>
   );

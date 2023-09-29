@@ -43,7 +43,11 @@ tweetRouter.get(
     const tweets = await Tweet.find({ tweetedBy: req.params.id });
 
     if (tweets) {
-      res.send(tweets);
+      res.json({
+        message: 'succeeded',
+        tweets,
+        statusCode: '201',
+      });
     } else {
       res.status(404).send({ message: 'tweets Not Found' });
     }
@@ -66,7 +70,7 @@ tweetRouter.get(
         })
         .exec();
       res.json({
-        message: 'sent',
+        message: 'succeeded',
         tweets,
         statusCode: '201',
       });
@@ -84,10 +88,23 @@ tweetRouter.post(
   asyncHandler(async (req, res) => {
     try {
       //const { _id } = await User.findById(req.user._id);
+      let tweet;
       const newTweet = new Tweet({ content: req.body.content });
       newTweet.tweetedBy = req.user._id;
-      const tweet = await newTweet.save();
-      res.json({ message: 'saved', tweet, statusCode: '202' });
+      tweet = await newTweet.save();
+      tweet = await Tweet.findById({ _id: tweet._id })
+        .populate({
+          path: 'tweetedBy',
+          model: User,
+          select: '_id userName email following followers createdAt',
+        })
+        .populate({
+          path: 'retweetBy',
+          model: User,
+          select: '_id userName email following followers createdAt',
+        })
+        .exec();
+      res.json({ message: 'succeeded', tweet, statusCode: '201' });
     } catch (err) {
       res.status(404).send({ message: 'tweets Not Found', err });
     }
@@ -107,8 +124,20 @@ tweetRouter.post(
       const tweet = await Tweet.findById(req.body.tweetId);
       tweet.comments.push(comment);
 
-      const updatedTweet = await tweet.save();
-      res.json({ message: 'saved', updatedTweet, statusCode: '202' });
+      const savedTweet = await tweet.save();
+      const commentedTweet = await Tweet.findById({ _id: savedTweet._id })
+        .populate({
+          path: 'tweetedBy',
+          model: User,
+          select: '_id userName email following followers createdAt',
+        })
+        .populate({
+          path: 'retweetBy',
+          model: User,
+          select: '_id userName email following followers createdAt',
+        })
+        .exec();
+      res.json({ message: 'succeeded', commentedTweet, statusCode: '201' });
     } catch (err) {
       res.status(404).send({ message: 'tweets Not Found', err });
     }
@@ -119,8 +148,20 @@ tweetRouter.put('/:id/like', isAuth, async (req, res) => {
   const tweet = await Tweet.findById(req.params.id);
   if (tweet) {
     !tweet.likes.includes(req.user._id) && tweet.likes.push(req.user._id);
-    const updatedTweet = await tweet.save();
-    res.json({ message: 'Tweet liked', updatedTweet, statusCode: '202' });
+    const savedTweet = await tweet.save();
+    const likedTweet = await Tweet.findById({ _id: savedTweet._id })
+      .populate({
+        path: 'tweetedBy',
+        model: User,
+        select: '_id userName email following followers createdAt',
+      })
+      .populate({
+        path: 'retweetBy',
+        model: User,
+        select: '_id userName email following followers createdAt',
+      })
+      .exec();
+    res.json({ message: 'succeeded', likedTweet, statusCode: '201' });
   } else {
     res.send('error');
   }
@@ -130,8 +171,20 @@ tweetRouter.put('/:id/retweet', isAuth, async (req, res) => {
   if (tweet) {
     !tweet.retweetBy.includes(req.user._id) &&
       tweet.retweetBy.push(req.user._id);
-    const updatedTweet = await tweet.save();
-    res.json({ message: 'ReTweeted', updatedTweet, statusCode: '202' });
+    const savedTweet = await tweet.save();
+    const reTweeted = await Tweet.findById({ _id: savedTweet._id })
+      .populate({
+        path: 'tweetedBy',
+        model: User,
+        select: '_id userName email following followers createdAt',
+      })
+      .populate({
+        path: 'retweetBy',
+        model: User,
+        select: '_id userName email following followers createdAt',
+      })
+      .exec();
+    res.json({ message: 'succeeded', reTweeted, statusCode: '201' });
   } else {
     res.send('error');
   }
@@ -141,7 +194,7 @@ tweetRouter.put('/:id/delete', isAuth, async (req, res) => {
   const tweet = await Tweet.findById(req.params.id);
   if (tweet) {
     const deletedTweet = await tweet.deleteOne();
-    res.json({ message: 'Tweet liked', deletedTweet, statusCode: '202' });
+    res.json({ message: 'succeeded', deletedTweet, statusCode: '201' });
   } else {
     res.send('error');
   }
