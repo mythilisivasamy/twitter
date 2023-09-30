@@ -76,6 +76,7 @@ const TweetList = () => {
   const onSubmit = (formValues) => {
     try {
       if (title === 'Tweet') {
+        
         dispatch(createTweet({ ...formValues })).unwrap();
       }
       if (title === 'Comment') {
@@ -126,7 +127,7 @@ const TweetList = () => {
             </div>
           </Card.Body>
         </Card>
-        <div>{content}</div>
+        {content}
       </div>
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>{`New ${title}`}</Modal.Header>
@@ -162,10 +163,9 @@ const TweetList = () => {
                   <input
                     type="file"
                     name="profilePic"
-                    {...register('profilePic')}
                     className="FileUpload"
                     accept=".jpg,.png,.gif"
-                    onChange={() => handleFileSelect()}
+                    onChange={(e) => handleFileSelect(e)}
                     ref={fileInput}
                   />
                 </span>

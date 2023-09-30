@@ -7,7 +7,7 @@ import multer from 'multer';
 const tweetRouter = express.Router();
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'public/images/');
+    cb(null, 'images/');
   },
   filename: (req, file, cb) => {
     cb(null, file.originalname);
@@ -36,7 +36,9 @@ const upload = multer({
 });
 
 //Tweets API
-
+tweetRouter.post('/upload', upload.single('profileImg'), async (req, res) => {
+  res.send('succeeded');
+});
 tweetRouter.get(
   '/:id/tweets',
   asyncHandler(async (req, res) => {

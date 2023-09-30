@@ -5,9 +5,10 @@ const ProfileImg = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData();
-    formData.set('profileImg', fileInput.current.value);
+    formData.append('profileImg', fileInput.current.value);
+    console.log(formData, fileInput.current.value);
     try {
-      const response = await fetch('/profile', {
+      const response = await fetch('http://localhost:8000/api/tweet/upload', {
         method: 'POST',
         body: formData,
       });

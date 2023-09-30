@@ -4,7 +4,7 @@ import Layout from './components/Layout';
 import Home from './Home';
 import Login from './Login';
 import Register from './Register';
-import Profile from './Profile';
+
 import ProfileImg from './components/ProfileImg';
 import RouteGuard from './components/RouteGuard';
 import TweetList from './components/TweetList';
@@ -25,21 +25,12 @@ function App() {
               </RouteGuard>
             }
           >
-
-            <Route
-              index
-              element={
-                <RouteGuard>
-                  <TweetList />
-                </RouteGuard>
-              }
-            />
-             <Route path='tweet/:id' element={<UserProfile />} />
-            <Route path="profile" element={<Profile />} />
+            <Route index element={<TweetList />} />
+            <Route path="tweet/:id" element={<UserProfile />} />
             <Route path="upload" element={<ProfileImg />} />
-           
           </Route>
           <Route path="register" element={<Register />} />
+          <Route path='upload' element={<ProfileImg/>} />
         </Route>
       </Routes>
     </Router>

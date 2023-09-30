@@ -4,12 +4,12 @@ import './index.css';
 import App from './App';
 import store from './app/store';
 import { Provider } from 'react-redux';
-import { fetchTweets, setStatusCode } from './features/tweetSlice';
+
 import reportWebVitals from './reportWebVitals';
-try {
-  store.dispatch(fetchTweets()).unwrap();
-  store.dispatch(setStatusCode());
-} catch (err) {}
+import { fetchTweets } from './features/tweetSlice';
+import { fetchUsers } from './features/userSlice';
+store.dispatch(fetchTweets());
+store.dispatch(fetchUsers());
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>

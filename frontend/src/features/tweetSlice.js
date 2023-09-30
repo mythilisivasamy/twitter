@@ -5,13 +5,14 @@ const initialState = {
   message: '',
   status: '',
   statusCode: '',
-  tweets: [],
+  tweets: localStorage.getItem('tweets')
+    ? JSON.parse(localStorage.getItem('tweets'))
+    : [],
 };
 export const createTweet = createAsyncThunk(
   'tweet/createTweet',
   async (newTweet) => {
     try {
-      console.log('new Tweet', newTweet);
       const { token } = JSON.parse(localStorage.getItem('authInfo'));
 
       const response = await axios.post(`${TWEET_URL}/`, newTweet, {
@@ -140,6 +141,7 @@ const tweetSlice = createSlice({
         state.status = action.payload.message;
         state.statusCode = action.payload.statusCode;
         state.tweets = action.payload.tweets;
+        localStorage.setItem('tweets', JSON.stringify(state.tweets));
       })
       .addCase(fetchTweets.rejected, (state, action) => {
         state.status = action.error.message;
@@ -155,6 +157,7 @@ const tweetSlice = createSlice({
         const { _id } = action.payload.likedTweet;
         const tweets = state.tweets.filter((t) => t._id !== _id);
         state.tweets = [...tweets, action.payload.likedTweet];
+        localStorage.setItem('tweets', JSON.stringify(state.tweets));
       })
       .addCase(reTweet.fulfilled, (state, action) => {
         state.status = action.payload.message;
@@ -162,6 +165,7 @@ const tweetSlice = createSlice({
         const { _id } = action.payload.reTweeted;
         const tweets = state.tweets.filter((t) => t._id !== _id);
         state.tweets = [...tweets, action.payload.reTweeted];
+        localStorage.setItem('tweets', JSON.stringify(state.tweets));
       })
       .addCase(deleteTweet.pending, (state) => {
         state.status = 'loading';
@@ -173,12 +177,13 @@ const tweetSlice = createSlice({
         const { _id } = action.payload.deletedTweet;
         const tweets = state.tweets.filter((t) => t._id !== _id);
         state.tweets = tweets;
+        localStorage.setItem('tweets', JSON.stringify(state.tweets));
       });
   },
 });
 export const selectStatus = (state) => state.tweet.status;
 export const selectAllTweets = (state) => state.tweet.tweets;
 export const { setStatusCode } = tweetSlice.actions;
-export const selectTweetById = (state, tweetId) => state.tweet.tweets.find((tweet) => tweet._id === tweetId);
-export const selectUserTweets=(state,tweet)=>state.tweet.tweets.filter(t=>t.tweetedBy._id===tweet.tweetedBy._id)
+export const selectUserTweets = (state, userId) =>
+  state.tweet.tweets.filter((t) => t.tweetedBy._id === userId);
 export default tweetSlice.reducer;

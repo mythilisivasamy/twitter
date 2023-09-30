@@ -1,3 +1,4 @@
-const nums = [1, 3, 5, 7];
-console.log(!nums.includes(13));
-<i class="bi bi-twitter"></i>;
+let arr = [{ name: 'mythili' }, { name: 'mahi' }, { name: 'prathi' }];
+let a1 = arr.filter((i) => i.name !== 'mythili' && i.name !== 'mahi');
+
+console.log(a1);

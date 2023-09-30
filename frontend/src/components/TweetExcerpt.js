@@ -34,7 +34,8 @@ const TweetExcerpt = ({ ...props }) => {
               )}
             </span>
             <span className="text-end">
-              {props.tweet.tweetedBy._id === authInfo._id ? (
+              {props.tweet.tweetedBy._id &&
+              props.tweet.tweetedBy._id === authInfo._id ? (
                 <button
                   className="bg-white border-0"
                   onClick={() => props.handleDelete(props.tweet)}
@@ -60,7 +61,10 @@ const TweetExcerpt = ({ ...props }) => {
             </div>
             <div className="col-10">
               <span className="fw-bold small">
-                <Link to={`tweet/${props.tweet._id}`} className="fw-bold small">
+                <Link
+                  to={`tweet/${props.tweet.tweetedBy._id}`}
+                  className="fw-bold small"
+                >
                   @{props.tweet.tweetedBy.userName}
                 </Link>
               </span>

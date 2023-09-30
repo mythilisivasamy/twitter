@@ -44,7 +44,7 @@ const tweetSchema = new mongoose.Schema(
         ref: 'Tweet',
       },
     ],
-    
+       
   },
   {
     timestamps: true,

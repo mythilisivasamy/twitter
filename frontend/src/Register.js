@@ -26,14 +26,13 @@ const Register = () => {
     if (statusCode === '201') {
       dispatch(setStatusCode());
       toast.success('Signed Up Successfully');
-      navigate('/login');
+      navigate('/');
     }
     if (statusCode === '202') {
       dispatch(setStatusCode());
     }
   }, [navigate, statusCode, dispatch]);
   const onSubmit = (formValues) => {
-    console.log(formValues);
     try {
       dispatch(signup({ ...formValues })).unwrap();
     } catch (err) {
@@ -48,7 +47,7 @@ const Register = () => {
           <div className="card shadow">
             <div className="card-body">
               <h4 className="card-title text-center fw-bold">
-                <span>Sign In </span>
+                <span>Sign Up </span>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="36"
