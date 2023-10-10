@@ -2,7 +2,6 @@ import express from 'express';
 import User from '../models/userModel.js';
 import { isAuth } from '../middleware/protectedRoute.js';
 import asyncHandler from 'express-async-handler';
-import { upload } from '../middleware/imageHandler.js';
 const userRouter = express.Router();
 userRouter.get(
   '/:id',
@@ -76,27 +75,20 @@ userRouter.put('/:id/unfollow', async (req, res) => {
 });
 userRouter.put('/:id/uploadProfilePic', async (req, res) => {});
 
-userRouter.post(
-  '/profile',
-  isAuth,
-  upload.single('profilePic'),
-  async (req, res) => {
-    console.log(req.body);
-    const { location, dob } = req.body;
-    const user = await User.findById(req.user._id);
-    if (user) {
-      user.location = location;
-      user.dob = dob;
-      const updatedUser = await user.save();
-      console.log(updatedUser);
-      return res.status(201).json({
-        message: 'succeeded',
-        statusCode: '201',
-        user: updatedUser,
-      });
-    } else {
-      return res.status(404).json('User not found');
-    }
+userRouter.put('/profile', isAuth, async (req, res) => {
+  const { location, dob } = req.body;
+  const user = await User.findById(req.user._id);
+  if (user) {
+    user.location = location;
+    user.dob = dob;
+    const updatedUser = await user.save();
+    return res.status(201).json({
+      message: 'succeeded',
+      statusCode: '201',
+      user: updatedUser,
+    });
+  } else {
+    return res.status(404).json('User not found');
   }
-);
+});
 export default userRouter;

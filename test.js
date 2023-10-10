@@ -1,4 +1,14 @@
-let arr = [{ name: 'mythili' }, { name: 'mahi' }, { name: 'prathi' }];
-let a1 = arr.filter((i) => i.name !== 'mythili' && i.name !== 'mahi');
+const data=fetch('https://jsonplaceholder.typicode.com/todos/1',(err,data)=>{
 
-console.log(a1);
+})
+try{
+    axios.get('https://jsonplaceholder.typicode.com/todos/1',{data},{heder}).then().catch()
+
+}
+catch(err)
+try{
+    
+}
+catch()
+
+async()

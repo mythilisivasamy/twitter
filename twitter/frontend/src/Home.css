@@ -1,0 +1,38 @@
+.upload-box {
+  height: 300px;
+  width: 300px;
+  border: 1px solid black;
+  border-radius: 10px;
+  position: relative;
+}
+.hide {
+  visibility: hidden;
+}
+
+.dropZoneOverlay {
+  font-family: cursive;
+  color: #7066fb;
+  position: absolute;
+  top: 50px;
+  left: -5px;
+  text-align: center;
+  width: 350px;
+  height: 250px;
+  cursor: pointer;
+}
+
+.FileUpload,
+.ficon {
+  top: -10px;
+  left: 15px;
+  position: absolute;
+  z-index: 1;
+}
+.FileUpload {
+  opacity: 0;
+}
+
+.iconContainer {
+  position: relative;
+  cursor: pointer;
+}

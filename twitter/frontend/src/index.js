@@ -7,9 +7,9 @@ import { Provider } from 'react-redux';
 
 import reportWebVitals from './reportWebVitals';
 import { fetchTweets } from './features/tweetSlice';
-
-  store.dispatch(fetchTweets());
-
+import { fetchUsers } from './features/userSlice';
+store.dispatch(fetchTweets());
+store.dispatch(fetchUsers());
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>

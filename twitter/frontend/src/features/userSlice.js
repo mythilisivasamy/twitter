@@ -2,9 +2,6 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
 const USER_URL = 'http://localhost:8000/api/user';
-if (localStorage.getItem('users') === 'undefined') {
-  localStorage.setItem('users', '');
-}
 
 // setting initial state of the user Slice
 const initialState = {
@@ -49,13 +46,10 @@ export const updateProfile = createAsyncThunk(
   'user/updateProfile',
   async (profile) => {
     try {
-      console.log('profile', profile);
+     
       const { token } = JSON.parse(localStorage.getItem('authInfo'));
-      const response = await axios.post(`${USER_URL}/profile`, profile, {
-        headers: {
-          authorization: `Bearer ${token}`,
-          ContentType: 'multipart/form-data',
-        },
+      const response = await axios.put(`${USER_URL}/profile`, profile, {
+        headers: { authorization: `Bearer ${token}` },
       });
       console.log('res', response.data);
       return response.data;

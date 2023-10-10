@@ -10,7 +10,10 @@ import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import { useDispatch, useSelector } from 'react-redux';
 import TweetExcerpt from './TweetExcerpt';
-import { selectUserById, updateProfile } from '../features/userSlice';
+import {
+  selectUserById,
+  updateProfile,
+} from '../features/userSlice';
 import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
@@ -85,11 +88,12 @@ const UserProfile = () => {
     />
   ));
   const onSubmit = (formValues) => {
-    console.log(formValues.profilePic[0]);
-    const formData = new FormData();
-    formData.append('file', formValues.profilePic[0].file);
     try {
-      dispatch(updateProfile({ ...formValues, ...formData })).unwrap();
+      dispatch(
+        updateProfile({
+          ...formValues,
+        })
+      ).unwrap();
     } catch (err) {}
   };
 
@@ -177,13 +181,14 @@ const UserProfile = () => {
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>Edit profile</Modal.Header>
         <Modal.Body>
-          <Form onSubmit={handleSubmit(onSubmit)} enctype="multipart/form-data">
+          <Form onSubmit={handleSubmit(onSubmit)}>
             <Row className="mx-2">
               <Col xs={12}>
                 <Form.Group className="mb-3" controlId="location">
                   <Form.Label>Location</Form.Label>
                   <Form.Control
                     type="text"
+                    name="location"
                     {...register('location', {
                       required: {
                         value: true,
@@ -206,21 +211,10 @@ const UserProfile = () => {
                   <Form.Label>DOB</Form.Label>
                   <Form.Control
                     type="date"
+                    name="dob"
                     className="p-2 mb-2 form-control input-bg"
                     {...register('dob')}
                     placeholder="DOB"
-                  />
-                </Form.Group>
-              </Col>
-            </Row>
-            <Row className="mx-2">
-              <Col xs={12}>
-                <Form.Group className="mb-3" controlId="profilePic">
-                  <Form.Label>Profile Img</Form.Label>
-                  <Form.Control
-                    type="file"
-                    className="p-2 mb-2 form-control input-bg"
-                    {...register('profilePic')}
                   />
                 </Form.Group>
               </Col>

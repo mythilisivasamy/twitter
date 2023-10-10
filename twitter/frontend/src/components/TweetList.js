@@ -7,7 +7,7 @@ import TweetExcerpt from './TweetExcerpt';
 
 import { faImage } from '@fortawesome/free-solid-svg-icons';
 import { toast } from 'react-toastify';
-import { useState, useEffect } from 'react';
+import { useState, createRef } from 'react';
 import { useForm } from 'react-hook-form';
 import Card from 'react-bootstrap/Card';
 import LoadingBox from '../components/LoadingBox';
@@ -20,9 +20,9 @@ import {
   selectAllTweets,
   selectStatus,
 } from '../features/tweetSlice';
-import { fetchUsers } from '../features/userSlice';
 
 const TweetList = () => {
+  const fileInput = createRef();
   const [show, setShow] = useState(false);
   const [title, setTitle] = useState('');
   const [tweetId, setTweetId] = useState('');
@@ -37,9 +37,6 @@ const TweetList = () => {
 
   const dispatch = useDispatch();
   const allTweets = useSelector(selectAllTweets);
-  useEffect(() => {
-    dispatch(fetchUsers());
-  }, [dispatch]);
 
   const [image, setImage] = useState({
     preview: '',
@@ -77,12 +74,10 @@ const TweetList = () => {
 
   //handling form submit
   const onSubmit = (formValues) => {
-    console.log({ ...formValues });
     try {
       if (title === 'Tweet') {
-        dispatch(
-          createTweet({ ...formValues})
-        ).unwrap();
+        
+        dispatch(createTweet({ ...formValues })).unwrap();
       }
       if (title === 'Comment') {
         dispatch(createComment({ ...formValues, tweetId })).unwrap();
@@ -137,9 +132,10 @@ const TweetList = () => {
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>{`New ${title}`}</Modal.Header>
         <Modal.Body>
-          <form onSubmit={handleSubmit(onSubmit)} type="multipart/form-data">
+          <form onSubmit={handleSubmit(onSubmit)}>
             <textarea
               style={{ width: '350px', height: '100px' }}
+              name="content"
               className="p-2 my-3 form-control input-bg"
               placeholder={`Enter Your ${title}`}
               {...register('content')}
@@ -166,11 +162,11 @@ const TweetList = () => {
                   <FontAwesomeIcon icon={faImage} className="ficon" />
                   <input
                     type="file"
-                    {...register('profilePic')}
+                    name="profilePic"
                     className="FileUpload"
                     accept=".jpg,.png,.gif"
-                    onChange={handleFileSelect}
-                    
+                    onChange={(e) => handleFileSelect(e)}
+                    ref={fileInput}
                   />
                 </span>
               )

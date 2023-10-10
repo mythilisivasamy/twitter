@@ -1,9 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 const TWEET_URL = 'http://localhost:8000/api/tweet';
-if (localStorage.getItem('tweets') === 'undefined') {
-  localStorage.setItem('tweets', '');
-}
 const initialState = {
   message: '',
   status: '',
@@ -16,12 +13,10 @@ export const createTweet = createAsyncThunk(
   'tweet/createTweet',
   async (newTweet) => {
     try {
-      console.log('newTwet', newTweet);
       const { token } = JSON.parse(localStorage.getItem('authInfo'));
 
-      const response = await axios.post(`${TWEET_URL}/`,{...newTweet,profilePic:newTweet.profilePic[0]}, {
-        headers: { authorization: `Bearer ${token}`},
-        
+      const response = await axios.post(`${TWEET_URL}/`, newTweet, {
+        headers: { authorization: `Bearer ${token}` },
       });
       return response.data;
     } catch (err) {
@@ -146,7 +141,6 @@ const tweetSlice = createSlice({
         state.status = action.payload.message;
         state.statusCode = action.payload.statusCode;
         state.tweets = action.payload.tweets;
-        console.log(state.tweets);
         localStorage.setItem('tweets', JSON.stringify(state.tweets));
       })
       .addCase(fetchTweets.rejected, (state, action) => {

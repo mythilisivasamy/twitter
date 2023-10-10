@@ -3,8 +3,37 @@ import User from '../models/userModel.js';
 import Tweet from '../models/tweetModel.js';
 import { isAuth } from '../middleware/protectedRoute.js';
 import asyncHandler from 'express-async-handler';
-import { upload } from '../middleware/imageHandler.js';
+import multer from 'multer';
 const tweetRouter = express.Router();
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'images/');
+  },
+  filename: (req, file, cb) => {
+    cb(null, file.originalname);
+  },
+});
+
+const upload = multer({
+  storage: storage,
+  limits: {
+    fileSize: 1024 * 1024 * 1,
+  },
+  fileFilter: (req, file, cb) => {
+    if (
+      file.mimetype == 'image/png' ||
+      file.mimetype == 'image/jpg' ||
+      file.mimetype == 'image/jpeg'
+    ) {
+      cb(null, true);
+    } else {
+      cb(null, false);
+      return res
+        .status(400)
+        .json({ error: 'File types allowed are .jpeg, .png, .jpg' });
+    }
+  },
+});
 
 //Tweets API
 tweetRouter.post('/upload', upload.single('profileImg'), async (req, res) => {
@@ -60,7 +89,6 @@ tweetRouter.post(
   upload.single('profilePic'),
   asyncHandler(async (req, res) => {
     try {
-      console.log(req.body, req.files);
       //const { _id } = await User.findById(req.user._id);
       let tweet;
       const newTweet = new Tweet({ content: req.body.content });
